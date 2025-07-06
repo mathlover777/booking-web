@@ -2,6 +2,8 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import CustomSignInButton from "@/components/CustomSignInButton";
 
 export default function Home() {
+  const bookingEmail = process.env.BOOKING_EMAIL || "book@bhaang.com";
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Hero Section */}
@@ -17,7 +19,7 @@ export default function Home() {
             </h1>
             <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Your intelligent AI assistant that manages your calendar through email. 
-              Simply add <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-blue-600 font-mono">book@bhaang.com</code> to any email thread and let AI handle the rest.
+              Simply add <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-blue-600 font-mono">{bookingEmail}</code> to any email thread and let AI handle the rest.
             </p>
           </div>
 
@@ -96,7 +98,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white">Add to Email Thread</h3>
-                    <p className="text-gray-600 dark:text-gray-300">Include <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded text-blue-600 font-mono">book@bhaang.com</code> in any email conversation about scheduling.</p>
+                    <p className="text-gray-600 dark:text-gray-300">Include <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded text-blue-600 font-mono">{bookingEmail}</code> in any email conversation about scheduling.</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
