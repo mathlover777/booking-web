@@ -1,6 +1,8 @@
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 export default function Dashboard() {
+  const bookingEmail = process.env.BOOKING_EMAIL || "book@bhaang.com";
+
   return (
     <>
       <SignedOut>
@@ -44,7 +46,7 @@ export default function Dashboard() {
             </p>
             <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 mb-6 inline-block">
               <code className="text-xl font-mono text-blue-600 dark:text-blue-400">
-                book@bhaang.com
+                {bookingEmail}
               </code>
             </div>
             <p className="text-gray-600 dark:text-gray-300">
@@ -74,7 +76,7 @@ export default function Dashboard() {
               🤖 Add Our AI Assistant
             </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Include <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded text-blue-600 font-mono">book@bhaang.com</code> in the CC or BCC field.
+              Include <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded text-blue-600 font-mono">{bookingEmail}</code> in the CC or BCC field.
             </p>
             <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
               <p className="text-sm text-green-800 dark:text-green-200">
@@ -136,7 +138,7 @@ export default function Dashboard() {
                   &quot;Hi team, let&apos;s discuss the new product launch. I&apos;m thinking we need a 30-minute meeting to align on the strategy.&quot;
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                  CC: book@bhaang.com
+                  CC: {bookingEmail}
                 </p>
               </div>
             </div>
@@ -147,7 +149,7 @@ export default function Dashboard() {
                   &quot;Hi John, thanks for your application. I&apos;d like to schedule a 45-minute interview to discuss the role.&quot;
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                  CC: book@bhaang.com
+                  CC: {bookingEmail}
                 </p>
               </div>
             </div>
