@@ -9,7 +9,6 @@ interface CustomSignInButtonProps {
 
 export default function CustomSignInButton({ variant = 'default' }: CustomSignInButtonProps) {
   const { openSignIn } = useClerk();
-  const router = useRouter();
 
   const handleSignIn = () => {
     openSignIn({

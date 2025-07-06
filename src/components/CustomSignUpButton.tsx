@@ -9,7 +9,6 @@ interface CustomSignUpButtonProps {
 
 export default function CustomSignUpButton({ variant = 'default' }: CustomSignUpButtonProps) {
   const { openSignUp } = useClerk();
-  const router = useRouter();
 
   const handleSignUp = () => {
     openSignUp({
