@@ -1,7 +1,6 @@
 'use client';
 
 import { useClerk } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 
 interface CustomSignInButtonProps {
   variant?: 'default' | 'header';
@@ -9,7 +8,6 @@ interface CustomSignInButtonProps {
 
 export default function CustomSignInButton({ variant = 'default' }: CustomSignInButtonProps) {
   const { openSignIn } = useClerk();
-  const router = useRouter();
 
   const handleSignIn = () => {
     openSignIn({

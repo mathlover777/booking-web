@@ -1,6 +1,5 @@
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import CustomSignInButton from "@/components/CustomSignInButton";
-import Image from "next/image";
 
 export default function Home() {
   return (
@@ -35,7 +34,7 @@ export default function Home() {
             <SignedIn>
               <div className="text-center">
                 <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
-                  Welcome back! You're all set to start scheduling.
+                  Welcome back! You&apos;re all set to start scheduling.
                 </p>
                 <a 
                   href="/dashboard" 
@@ -128,7 +127,7 @@ export default function Home() {
       <footer className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-gray-600 dark:text-gray-400">
-            © 2024 Vibes AI Scheduler. Making scheduling effortless through intelligent email automation.
+            &copy; 2024 Vibes AI Scheduler. Making scheduling effortless through intelligent email automation.
           </p>
         </div>
       </footer>

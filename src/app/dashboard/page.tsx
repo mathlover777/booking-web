@@ -37,7 +37,7 @@ export default function Dashboard() {
               </svg>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              You're All Set!
+              You&apos;re All Set!
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
               To schedule any meeting, simply add our AI assistant to your email thread:
@@ -64,7 +64,7 @@ export default function Dashboard() {
             </p>
             <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
               <p className="text-sm text-blue-800 dark:text-blue-200">
-                <strong>Example:</strong> "Hi Sarah, I'd like to discuss the Q4 project. Are you available for a meeting?"
+                <strong>Example:</strong> &quot;Hi Sarah, I&apos;d like to discuss the Q4 project. Are you available for a meeting?&quot;
               </p>
             </div>
           </div>
@@ -133,7 +133,7 @@ export default function Dashboard() {
               <h3 className="font-semibold text-gray-900 dark:text-white">Meeting Request</h3>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                 <p className="text-sm text-gray-700 dark:text-gray-300">
-                  "Hi team, let's discuss the new product launch. I'm thinking we need a 30-minute meeting to align on the strategy."
+                  &quot;Hi team, let&apos;s discuss the new product launch. I&apos;m thinking we need a 30-minute meeting to align on the strategy.&quot;
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                   CC: book@bhaang.com
@@ -144,7 +144,7 @@ export default function Dashboard() {
               <h3 className="font-semibold text-gray-900 dark:text-white">Interview Scheduling</h3>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                 <p className="text-sm text-gray-700 dark:text-gray-300">
-                  "Hi John, thanks for your application. I'd like to schedule a 45-minute interview to discuss the role."
+                  &quot;Hi John, thanks for your application. I&apos;d like to schedule a 45-minute interview to discuss the role.&quot;
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                   CC: book@bhaang.com
