@@ -1,7 +1,6 @@
 'use client';
 
 import { useClerk } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 
 interface CustomSignUpButtonProps {
   variant?: 'default' | 'header';

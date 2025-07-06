@@ -37,7 +37,7 @@ export default function Dashboard() {
               </svg>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              You're All Set!
+              You&apos;re All Set!
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
               To schedule any meeting, simply add our AI assistant to your email thread:
