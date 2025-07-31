@@ -1,8 +1,8 @@
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import CustomSignInButton from "@/components/CustomSignInButton";
+import DynamicBookingEmail from "@/components/DynamicBookingEmail";
 
 export default function Home() {
-  const bookingEmail = process.env.BOOKING_EMAIL || "book@bhaang.com";
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -19,7 +19,12 @@ export default function Home() {
             </h1>
             <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Your intelligent AI assistant that manages your calendar through email. 
-              Simply add <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-blue-600 font-mono">{bookingEmail}</code> to any email thread and let AI handle the rest.
+              <SignedIn>
+                Simply add <DynamicBookingEmail /> to any email thread and let AI handle the rest.
+              </SignedIn>
+              <SignedOut>
+                Sign in to get your personalized concierge email and start scheduling effortlessly.
+              </SignedOut>
             </p>
           </div>
 
@@ -34,16 +39,24 @@ export default function Home() {
               </div>
             </SignedOut>
             <SignedIn>
-              <div className="text-center">
-                <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
+              <div className="text-center space-y-6">
+                <p className="text-lg text-gray-600 dark:text-gray-300">
                   Welcome back! You&apos;re all set to start scheduling.
                 </p>
-                <a 
-                  href="/dashboard" 
-                  className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                >
-                  Go to Dashboard
-                </a>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <a 
+                    href="/dashboard" 
+                    className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                  >
+                    Go to Dashboard
+                  </a>
+                  <a 
+                    href="/setup-email" 
+                    className="inline-block border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200"
+                  >
+                    Set Up Email
+                  </a>
+                </div>
               </div>
             </SignedIn>
           </div>
@@ -98,7 +111,14 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white">Add to Email Thread</h3>
-                    <p className="text-gray-600 dark:text-gray-300">Include <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded text-blue-600 font-mono">{bookingEmail}</code> in any email conversation about scheduling.</p>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      <SignedIn>
+                        Include <DynamicBookingEmail /> in any email conversation about scheduling.
+                      </SignedIn>
+                      <SignedOut>
+                        Sign in to get your personalized email address for scheduling.
+                      </SignedOut>
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
