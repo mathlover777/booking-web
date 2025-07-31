@@ -2,26 +2,19 @@
 
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { useAuth } from "@clerk/nextjs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import DashboardInstructions from "@/components/DashboardInstructions";
 
 export default function Dashboard() {
-  const { userId, getToken, isLoaded, isSignedIn } = useAuth();
+  const { getToken, isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
   const [hasEmail, setHasEmail] = useState<boolean | null>(null);
   const [isChecking, setIsChecking] = useState(false);
 
   const baseUrl = process.env.NEXT_PUBLIC_BACKEND_API!;
 
-  // Check if user has email configured
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      checkUserEmail();
-    }
-  }, [isLoaded, isSignedIn]);
-
-  const checkUserEmail = async () => {
+  const checkUserEmail = useCallback(async () => {
     if (!isSignedIn) return;
 
     setIsChecking(true);
@@ -43,12 +36,19 @@ export default function Dashboard() {
       } else {
         setHasEmail(false);
       }
-    } catch (err) {
+    } catch {
       setHasEmail(false);
     } finally {
       setIsChecking(false);
     }
-  };
+  }, [isSignedIn, getToken, baseUrl]);
+
+  // Check if user has email configured
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      checkUserEmail();
+    }
+  }, [isLoaded, isSignedIn, checkUserEmail]);
 
   // Redirect to setup page if no email configured
   useEffect(() => {
