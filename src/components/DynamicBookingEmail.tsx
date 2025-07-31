@@ -1,28 +1,21 @@
 "use client";
 
 import { useAuth } from "@clerk/nextjs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface UserEmailData {
   assist_local: string;
 }
 
 export default function DynamicBookingEmail() {
-  const { userId, getToken, isLoaded, isSignedIn } = useAuth();
+  const { getToken, isLoaded, isSignedIn } = useAuth();
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const domain = process.env.NEXT_PUBLIC_DOMAIN!;
   const baseUrl = process.env.NEXT_PUBLIC_BACKEND_API!;
 
-  // Fetch user's email on component mount
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      fetchUserEmail();
-    }
-  }, [isLoaded, isSignedIn]);
-
-  const fetchUserEmail = async () => {
+  const fetchUserEmail = useCallback(async () => {
     if (!isSignedIn) return;
 
     setIsLoading(true);
@@ -43,13 +36,20 @@ export default function DynamicBookingEmail() {
       }
       // If 404 or any other status, it just means email is not set up yet
       // No need to treat it as an error
-    } catch (err) {
+    } catch {
       // Silently fail - email just not set up yet
-      console.warn("Email not configured yet:", err);
+      console.warn("Email not configured yet");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isSignedIn, getToken, baseUrl, domain]);
+
+  // Fetch user's email on component mount
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      fetchUserEmail();
+    }
+  }, [isLoaded, isSignedIn, fetchUserEmail]);
 
   // Show loading state briefly while fetching
   if (isLoading && isSignedIn) {

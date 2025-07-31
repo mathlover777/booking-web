@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@clerk/nextjs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 interface UserEmailData {
@@ -14,26 +14,19 @@ interface EmailAvailabilityResponse {
 }
 
 export default function SetupEmailPage() {
-  const { userId, getToken, isLoaded, isSignedIn } = useAuth();
+  const { getToken, isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
   const [emailData, setEmailData] = useState<UserEmailData | null>(null);
   const [editValue, setEditValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [availabilityMessage, setAvailabilityMessage] = useState<string | null>(null);
-  const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
+
 
   const domain = process.env.NEXT_PUBLIC_DOMAIN!;
   const baseUrl = process.env.NEXT_PUBLIC_BACKEND_API!;
 
-  // Check if user already has email configured
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      checkExistingEmail();
-    }
-  }, [isLoaded, isSignedIn]);
-
-  const checkExistingEmail = async () => {
+  const checkExistingEmail = useCallback(async () => {
     if (!isSignedIn) return;
 
     setIsLoading(true);
@@ -56,17 +49,23 @@ export default function SetupEmailPage() {
         }
       }
       // If 404 or any other status, it just means email is not set up yet
-    } catch (err) {
-      console.warn("Network error checking email:", err);
+    } catch {
+      console.warn("Network error checking email");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isSignedIn, getToken, baseUrl]);
+
+  // Check if user already has email configured
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      checkExistingEmail();
+    }
+  }, [isLoaded, isSignedIn, checkExistingEmail]);
 
   const checkEmailAvailability = async (emailLocal: string): Promise<boolean> => {
     if (!isSignedIn) return false;
 
-    setIsCheckingAvailability(true);
     setAvailabilityMessage(null);
 
     try {
@@ -95,11 +94,9 @@ export default function SetupEmailPage() {
         setAvailabilityMessage("❌ Email is already taken");
         return false;
       }
-    } catch (err) {
+    } catch {
       setAvailabilityMessage("❌ Error checking availability");
       return false;
-    } finally {
-      setIsCheckingAvailability(false);
     }
   };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@clerk/nextjs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface UserEmailData {
   assist_local: string;
@@ -13,26 +13,19 @@ interface EmailAvailabilityResponse {
 }
 
 export default function UserEmailManager() {
-  const { userId, getToken, isLoaded, isSignedIn } = useAuth();
+  const { getToken, isLoaded, isSignedIn } = useAuth();
   const [emailData, setEmailData] = useState<UserEmailData | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [availabilityMessage, setAvailabilityMessage] = useState<string | null>(null);
-  const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
+
 
   const domain = process.env.NEXT_PUBLIC_DOMAIN!;
   const baseUrl = process.env.NEXT_PUBLIC_BACKEND_API!;
 
-  // Fetch user's email on component mount
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      fetchUserEmail();
-    }
-  }, [isLoaded, isSignedIn]);
-
-  const fetchUserEmail = async () => {
+  const fetchUserEmail = useCallback(async () => {
     if (!isSignedIn) return;
 
     setIsLoading(true);
@@ -53,18 +46,24 @@ export default function UserEmailManager() {
       }
       // If 404 or any other status, it just means email is not set up yet
       // No need to treat it as an error
-    } catch (err) {
+    } catch {
       // Only show error for actual network/authentication issues
-      console.warn("Network error fetching email:", err);
+      console.warn("Network error fetching email");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isSignedIn, getToken, baseUrl]);
+
+  // Fetch user's email on component mount
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      fetchUserEmail();
+    }
+  }, [isLoaded, isSignedIn, fetchUserEmail]);
 
   const checkEmailAvailability = async (emailLocal: string): Promise<boolean> => {
     if (!isSignedIn) return false;
 
-    setIsCheckingAvailability(true);
     setAvailabilityMessage(null);
 
     try {
@@ -93,11 +92,9 @@ export default function UserEmailManager() {
         setAvailabilityMessage("❌ Email is already taken");
         return false;
       }
-    } catch (err) {
+    } catch {
       setAvailabilityMessage("❌ Error checking availability");
       return false;
-    } finally {
-      setIsCheckingAvailability(false);
     }
   };
 

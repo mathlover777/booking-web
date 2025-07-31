@@ -1,55 +1,21 @@
 "use client";
 
 import { useAuth } from "@clerk/nextjs";
-import { useState, useEffect } from "react";
-import DynamicBookingEmail from "./DynamicBookingEmail";
+import { useState, useEffect, useCallback } from "react";
 
 interface UserEmailData {
   assist_local: string;
 }
 
 export default function DashboardInstructions() {
-  const { userId, getToken, isLoaded, isSignedIn } = useAuth();
+  const { getToken, isLoaded, isSignedIn } = useAuth();
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const domain = process.env.NEXT_PUBLIC_DOMAIN!;
   const baseUrl = process.env.NEXT_PUBLIC_BACKEND_API!;
 
-  // Fetch user's email on component mount and when user changes
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      fetchUserEmail();
-    }
-  }, [isLoaded, isSignedIn, userId]);
-
-  // Listen for email update events
-  useEffect(() => {
-    const handleEmailUpdate = () => {
-      console.log("Email update event received, fetching email...");
-      // Add a small delay to ensure the API has updated
-      setTimeout(() => {
-        fetchUserEmail();
-      }, 500);
-    };
-
-    window.addEventListener('emailUpdated', handleEmailUpdate);
-    return () => window.removeEventListener('emailUpdated', handleEmailUpdate);
-  }, []);
-
-  // Fallback: Poll for email updates when userEmail is null (email not set up yet)
-  useEffect(() => {
-    if (!userEmail && isSignedIn && !isLoading) {
-      const interval = setInterval(() => {
-        console.log("Polling for email updates...");
-        fetchUserEmail();
-      }, 2000);
-      
-      return () => clearInterval(interval);
-    }
-  }, [userEmail, isSignedIn, isLoading]);
-
-  const fetchUserEmail = async () => {
+  const fetchUserEmail = useCallback(async () => {
     if (!isSignedIn) return;
 
     setIsLoading(true);
@@ -77,13 +43,46 @@ export default function DashboardInstructions() {
         setUserEmail(null);
       }
       // If 404 or any other status, it just means email is not set up yet
-    } catch (err) {
-      console.warn("Email not configured yet:", err);
+    } catch {
+      console.warn("Email not configured yet");
       setUserEmail(null);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isSignedIn, getToken, baseUrl, domain]);
+
+  // Fetch user's email on component mount
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      fetchUserEmail();
+    }
+  }, [isLoaded, isSignedIn, fetchUserEmail]);
+
+  // Listen for email update events
+  useEffect(() => {
+    const handleEmailUpdate = () => {
+      console.log("Email update event received, fetching email...");
+      // Add a small delay to ensure the API has updated
+      setTimeout(() => {
+        fetchUserEmail();
+      }, 500);
+    };
+
+    window.addEventListener('emailUpdated', handleEmailUpdate);
+    return () => window.removeEventListener('emailUpdated', handleEmailUpdate);
+  }, [fetchUserEmail]);
+
+  // Fallback: Poll for email updates when userEmail is null (email not set up yet)
+  useEffect(() => {
+    if (!userEmail && isSignedIn && !isLoading) {
+      const interval = setInterval(() => {
+        console.log("Polling for email updates...");
+        fetchUserEmail();
+      }, 2000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [userEmail, isSignedIn, isLoading, fetchUserEmail]);
 
   // Don't show anything if not loaded or not signed in
   if (!isLoaded || !isSignedIn) {
