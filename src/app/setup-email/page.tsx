@@ -248,7 +248,7 @@ export default function SetupEmailPage() {
                 This will be your personal AI assistant email for scheduling meetings.
                 {stage === 'dev' && (
                   <span className="block text-orange-600 dark:text-orange-400 mt-1">
-                    💡 Development mode: Email must end with '.dev' (e.g., alice.dev)
+                    💡 Development mode: Email must end with &apos;.dev&apos; (e.g., alice.dev)
                   </span>
                 )}
               </p>
