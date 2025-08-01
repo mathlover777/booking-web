@@ -25,6 +25,20 @@ export default function SetupEmailPage() {
 
   const domain = process.env.NEXT_PUBLIC_DOMAIN!;
   const baseUrl = process.env.NEXT_PUBLIC_BACKEND_API!;
+  const stage = process.env.NEXT_PUBLIC_STAGE || 'prod';
+
+  // Validation function for email based on stage
+  const validateEmailLocal = (emailLocal: string): { isValid: boolean; message?: string } => {
+    if (stage === 'dev') {
+      if (!emailLocal.endsWith('.dev')) {
+        return {
+          isValid: false,
+          message: "In development mode, email must end with '.dev' (e.g., alice.dev)"
+        };
+      }
+    }
+    return { isValid: true };
+  };
 
   const checkExistingEmail = useCallback(async () => {
     if (!isSignedIn) return;
@@ -107,6 +121,13 @@ export default function SetupEmailPage() {
     setError(null);
 
     try {
+      // Validate email format based on stage (always validate, even when editing)
+      const validation = validateEmailLocal(editValue.trim());
+      if (!validation.isValid) {
+        setError(validation.message || "Invalid email format");
+        return;
+      }
+
       // Check availability first (skip if it's the same email)
       if (editValue.trim() !== emailData?.assist_local) {
         const isAvailable = await checkEmailAvailability(editValue.trim());
@@ -151,6 +172,14 @@ export default function SetupEmailPage() {
     setEditValue(value);
     setError(null);
     setAvailabilityMessage(null);
+
+    // Real-time validation feedback
+    if (value.trim()) {
+      const validation = validateEmailLocal(value.trim());
+      if (!validation.isValid) {
+        setError(validation.message || "Invalid email format");
+      }
+    }
   };
 
   if (!isLoaded) {
@@ -217,6 +246,11 @@ export default function SetupEmailPage() {
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                 This will be your personal AI assistant email for scheduling meetings.
+                {stage === 'dev' && (
+                  <span className="block text-orange-600 dark:text-orange-400 mt-1">
+                    💡 Development mode: Email must end with &apos;.dev&apos; (e.g., alice.dev)
+                  </span>
+                )}
               </p>
             </div>
 
